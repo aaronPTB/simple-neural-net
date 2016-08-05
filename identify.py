@@ -22,8 +22,6 @@ class NeuralNetwork:
 
     def forward(self, matrix):
         ## Propegating results foreward and applying a nonlinearity
-        self.displayLayers()
-
         self.input = np.array(matrix).transpose()
         self.hidden_lin = np.dot(self.weights_ih, self.input)
         self.hidden = self.act(self.hidden_lin)
@@ -38,14 +36,13 @@ class NeuralNetwork:
         current_cost_prime = self.costPrime(matrix, np.array(expected))
 
         ## Calculates the layer 3 error
-        error_layer_3 = current_cost_prime * self.output
-        print error_layer_3.shape
-        dJdW_ho = self.hidden.transpose().dot(error_layer_3.transpose())
+        error_layer_3 = current_cost_prime.transpose()
+        dJdW_ho = self.hidden.transpose().dot(error_layer_3)
 
         ## Calculates the error for layer two by propogating back the error
         ## And applying the chain rule
         error_layer_2 = error_layer_3 * self.weights_ho.transpose() * self.actPrime(self.hidden_lin)
-        dJdW_ih = np.transpose(matrix).dot(error_layer_2)
+        dJdW_ih = matrix.transpose().dot(error_layer_2)
 
         self.weights_ho = self.weights_ho - dJdW_ho * self.learn_rate
         self.weights_ih = self.weights_ih - dJdW_ih * self.learn_rate
