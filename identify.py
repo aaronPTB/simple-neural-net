@@ -18,7 +18,7 @@ class NeuralNetwork:
         self.hidden     = np.zeros(input_size)
         self.output     = np.zeros(input_size)
 
-    def forward(matrix):
+    def forward(self, matrix):
         ## Propegating results foreward and applying a nonlinearity
         self.hidden_lin = weights_ih.dot(self.input)  + self.bias_ih
         self.hidden     = self.act(self.hidden_lin)
@@ -52,7 +52,7 @@ class NeuralNetwork:
         ## Derivative of activation function
         return np.square(np.sech(matrix))
 
-    def cost(matrix, expected):
+    def cost(self, matrix, expected):
         ## Uses cross entropy with a regularization constant added on top to
         ## Calculate the models cost
         ## To make the math work out
@@ -75,11 +75,24 @@ class NeuralNetwork:
 
         return cost
 
-    def costPrime(matrix, expected):
+    def costPrime(self, matrix, expected):
         matrix = np.transpose(matrix)
         cross_entropy_prime = self.forward(matrix) - expected
 
         return cross_entropy_prime
 
-    def getOutput():
+    def getOutput(self):
         return self.output
+
+    def displayLayers(self):
+        print "weights ih"
+        print self.weights_ih
+
+        print "hidden layer"
+        print self.hidden
+
+        print "weights ho"
+        print self.weights_ho
+
+        print "output"
+        print self.output
