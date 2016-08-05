@@ -1,13 +1,8 @@
-from identify.py import NeuralNetwork
+import numpy as np
+from identify import NeuralNetwork
 
-nn = NeuralNetwork(1, 1, 1)
+nn = NeuralNetwork(2, 1, 2)
 
-inp = np.transpose(np.array([1,0]))
+nn.forward([[1, 0]])
 
-nn.forward([1])
-nn.displayLayers()
-
-nn.train([1],[0])
-
-np.forward([1])
-np.displayLayers()
+nn.train(np.array([[1, 0]]),[[.2, .8]])
