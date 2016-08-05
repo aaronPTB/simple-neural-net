@@ -36,13 +36,14 @@ class NeuralNetwork:
         current_cost_prime = self.costPrime(matrix, np.array(expected))
 
         ## Calculates the layer 3 error
-        error_layer_3 = current_cost_prime.transpose()
+        error_layer_3 = np.sum(current_cost_prime, axis=0)
         dJdW_ho = self.hidden.transpose().dot(error_layer_3)
 
         ## Calculates the error for layer two by propogating back the error
         ## And applying the chain rule
-        error_layer_2 = error_layer_3 * self.weights_ho.transpose() * self.actPrime(self.hidden_lin)
-        dJdW_ih = matrix.transpose().dot(error_layer_2)
+        error_layer_2 = error_layer_3 * (self.weights_ho.transpose() * self.actPrime(self.hidden_lin))
+        error_layer_2 = np.sum(error_layer_2, axis=0)
+        dJdW_ih = matrix.dot(error_layer_2)
 
         self.weights_ho = self.weights_ho - dJdW_ho * self.learn_rate
         self.weights_ih = self.weights_ih - dJdW_ih * self.learn_rate
@@ -63,22 +64,23 @@ class NeuralNetwork:
         ## Calculating cross entropy
         ## Ok, was originally cross entropy but I changed it to
         ## Make the math easier on my end
-        cross_entropy = .5 * (self.forward(matrix) - expected)^2
+        cross_entropy = .5 * np.square(self.forward(matrix) - expected)
 
-        sum_weight_ih_squares = np.square(weights_ih).sum()
-        sum_weight_ho_squares = np.square(weights_ho).sum()
+        sum_weight_ih_squares = np.square(self.weights_ih).sum()
+        sum_weight_ho_squares = np.square(self.weights_ho).sum()
 
         ## This will encourage smaller constants in the weight matrices
         ## hopefully reducing overfitting.
         ## Will be added back eventually
 
         #lambda_factor = sum_weight_ho_squares  + sum_weight_ih_squares
-        cost = cross_entropy #+ self.reg_lambda * lambda_factor
+        cost = np.sum(cross_entropy) #+ self.reg_lambda * lambda_factor
 
         return cost
 
     def costPrime(self, matrix, expected):
         cross_entropy_prime = self.forward(matrix) - expected.transpose()
+        # print np.sum(cross_entropy_prime)
 
         return cross_entropy_prime
 
