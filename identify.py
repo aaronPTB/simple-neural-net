@@ -15,7 +15,7 @@ class NeuralNetwork:
         self.bias_ho    = np.random.rand(1, output_size).transpose()
         self.learn_rate = learn_rate
         self.reg_lambda = reg_lambda
-        self.input      = np.zeros((1, 2))
+        self.input      = np.zeros((1, input_size))
         self.hidden_lin = np.zeros((1, hidden_size))
         self.hidden     = np.zeros((1, hidden_size))
         self.output     = np.zeros((1, output_size))
@@ -23,6 +23,7 @@ class NeuralNetwork:
     def forward(self, matrix):
         ## Propegating results foreward and applying a nonlinearity
         self.input = np.array(matrix).transpose()
+        print self.weights_ih.shape
         self.hidden_lin = np.dot(self.weights_ih, self.input)
         self.hidden = self.act(self.hidden_lin)
         self.output = np.dot(self.weights_ho, self.hidden)
